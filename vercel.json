@@ -5,5 +5,12 @@
       "destination": "/novociclo",
       "permanent": false
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
+
