@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/novociclo",
+      "permanent": false
+    }
+  ]
+}
