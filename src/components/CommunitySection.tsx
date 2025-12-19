@@ -54,7 +54,7 @@ export const CommunitySection = () => {
           </div>
 
           <div className={`transition-all duration-700 delay-500 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-            <a href="https://instagram.com/landiturbina" target="_blank" rel="noopener noreferrer">
+            <a href="https://chat.whatsapp.com/IpoGf4NpLVL4E50gyfXXJR" target="_blank" rel="noopener noreferrer">
               <Button variant="hero" size="xl" className="font-headline text-lg tracking-wide group">
                 <span className="group-hover:scale-105 inline-block transition-transform">
                   FIQUE POR DENTRO DO PRÓXIMO RONCO
