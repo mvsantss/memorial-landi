@@ -10,53 +10,38 @@ export const AudioPlayer = () => {
     if (hasInitializedRef.current || !audioRef.current) return;
     hasInitializedRef.current = true;
     audioRef.current.volume = 0.5;
+    audioRef.current.muted = true;
+    setIsMuted(true);
+
     // Keep play/pause state in sync with element events
     const onPlay = () => setIsPlaying(true);
     const onPause = () => setIsPlaying(false);
     audioRef.current.addEventListener("play", onPlay);
     audioRef.current.addEventListener("pause", onPause);
-    const playAudio = async () => {
+
+    // Wait for user interaction to start playback
+    const onInteraction = () => {
       if (!audioRef.current) return;
-      try {
-        await audioRef.current.play();
-        setIsPlaying(true);
-      } catch (error) {
-        // Browser blocked autoplay - start muted and unmute on first interaction
-        if (audioRef.current) {
-          audioRef.current.muted = true;
-          setIsMuted(true);
-          // Try play muted and ensure interaction triggers playback/unmute
-          try {
-            await audioRef.current.play();
-            setIsPlaying(true);
-          } catch (e) {
-            console.warn("Autoplay muted still blocked:", e);
-          }
-          const onInteraction = () => {
-            if (!audioRef.current) return;
-            audioRef.current
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {});
-            audioRef.current.muted = false;
-            setIsMuted(false);
-            document.removeEventListener("click", onInteraction);
-            document.removeEventListener("scroll", onInteraction);
-            document.removeEventListener("keydown", onInteraction);
-            document.removeEventListener("touchstart", onInteraction);
-            document.removeEventListener("pointerdown", onInteraction);
-            document.removeEventListener("wheel", onInteraction);
-          };
-          document.addEventListener("click", onInteraction, { once: true });
-          document.addEventListener("scroll", onInteraction, { once: true });
-          document.addEventListener("keydown", onInteraction, { once: true });
-          document.addEventListener("touchstart", onInteraction, { once: true });
-          document.addEventListener("pointerdown", onInteraction, { once: true });
-          document.addEventListener("wheel", onInteraction, { once: true });
-        }
-      }
+      audioRef.current.muted = false;
+      setIsMuted(false);
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {});
+      document.removeEventListener("click", onInteraction);
+      document.removeEventListener("scroll", onInteraction);
+      document.removeEventListener("keydown", onInteraction);
+      document.removeEventListener("touchstart", onInteraction);
+      document.removeEventListener("pointerdown", onInteraction);
+      document.removeEventListener("wheel", onInteraction);
     };
-    playAudio();
+    document.addEventListener("click", onInteraction, { once: true });
+    document.addEventListener("scroll", onInteraction, { once: true });
+    document.addEventListener("keydown", onInteraction, { once: true });
+    document.addEventListener("touchstart", onInteraction, { once: true });
+    document.addEventListener("pointerdown", onInteraction, { once: true });
+    document.addEventListener("wheel", onInteraction, { once: true });
+
     return () => {
       audioRef.current?.removeEventListener("play", onPlay);
       audioRef.current?.removeEventListener("pause", onPause);
