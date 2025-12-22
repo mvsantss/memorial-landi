@@ -9,16 +9,14 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-// Importar imagens da camiseta com os novos nomes
-import camisetaMockupFrente from "@/assets/tshirts/freepik__preciso-de-um-mockup-de-camiseta-parte-da-frente-m__61732.png";
-import camisetaRack from "@/assets/tshirts/1º Encontro Landi Turbina-5.jpg";
-import camisetaPerson1 from "@/assets/tshirts/1º Encontro Landi Turbina-67.jpg";
-// Removida camisetaPerson2 pois não foi fornecida uma nova imagem para ela.
+import camisetaMockupFrente from "@/assets/tshirts/1º Encontro Landi Turbina-5.webp";
+import camisetaRack from "@/assets/tshirts/1º Encontro Landi Turbina-67.webp";
+import camisetaNova from "@/assets/tshirts/landi-turbina-mockup.webp";
 
 const tShirtImages = [
-  { src: camisetaMockupFrente, alt: "Camiseta Landi Turbina - Frente" },
-  { src: camisetaRack, alt: "Camisetas Landi Turbina no expositor" },
-  { src: camisetaPerson1, alt: "Pessoa usando camiseta Landi Turbina" },
+  { src: camisetaMockupFrente, alt: "Camiseta Landi Turbina - Mockup frente" },
+  { src: camisetaRack, alt: "Camiseta Landi Turbina em uso no evento" },
+  { src: camisetaNova, alt: "Camiseta Landi Turbina - frente em estúdio" },
 ];
 
 export const TShirtSection = () => {
@@ -82,7 +80,7 @@ export const TShirtSection = () => {
               Garanta a Sua!
             </h3>
             <p className="text-lg md:text-xl text-muted-foreground font-body mb-6">
-              Edição limitada do 1º Encontro.
+              Lançada no 1º Encontro Landi Turbina — disponível para todos.
             </p>
 
             <div className="bg-secondary/30 p-6 rounded-lg mb-8 border border-primary/20 shadow-inner">
