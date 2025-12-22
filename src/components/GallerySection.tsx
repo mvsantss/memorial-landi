@@ -101,7 +101,7 @@ export const GallerySection = () => {
             <div className="flex justify-center mt-12">
               <a href={googleDriveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full text-lg font-headline uppercase hover:bg-primary/90 transition-colors duration-300 shadow-lg hover:shadow-xl">
                 <ImageIcon className="w-5 h-5" />
-                <span>VER TODAS AS {galleryImages.length} FOTOS NO GOOGLE DRIVE</span>
+                <span>VER TODAS AS FOTOS NO DRIVE</span>
               </a>
             </div>
           </div>

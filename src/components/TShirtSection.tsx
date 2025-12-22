@@ -9,17 +9,16 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-// Importar imagens da camiseta
-import camisetaMockupFrente from "@/assets/tshirts/camiseta-mockup-frente.png";
-import camisetaRack from "@/assets/tshirts/camiseta-rack.jpg";
-import camisetaPerson1 from "@/assets/tshirts/camiseta-person-1.jpg";
-import camisetaPerson2 from "@/assets/tshirts/camiseta-person-2.jpg";
+// Importar imagens da camiseta com os novos nomes
+import camisetaMockupFrente from "@/assets/tshirts/freepik__preciso-de-um-mockup-de-camiseta-parte-da-frente-m__61732.png";
+import camisetaRack from "@/assets/tshirts/1º Encontro Landi Turbina-5.jpg";
+import camisetaPerson1 from "@/assets/tshirts/1º Encontro Landi Turbina-67.jpg";
+// Removida camisetaPerson2 pois não foi fornecida uma nova imagem para ela.
 
 const tShirtImages = [
   { src: camisetaMockupFrente, alt: "Camiseta Landi Turbina - Frente" },
   { src: camisetaRack, alt: "Camisetas Landi Turbina no expositor" },
   { src: camisetaPerson1, alt: "Pessoa usando camiseta Landi Turbina" },
-  { src: camisetaPerson2, alt: "Pessoa usando camiseta Landi Turbina em evento" },
 ];
 
 export const TShirtSection = () => {
