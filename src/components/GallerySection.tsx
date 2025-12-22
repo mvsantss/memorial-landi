@@ -48,7 +48,7 @@ export const GallerySection = () => {
   const nextImage = () => setSelectedImage(prev => prev !== null ? (prev + 1) % displayedImages.length : null);
   const prevImage = () => setSelectedImage(prev => prev !== null ? (prev - 1 + displayedImages.length) % displayedImages.length : null);
 
-  const googleDriveLink = "https://drive.google.com/drive/folders/1RbKzcJzHhgnNruqaexwv3An6tnsUvVq-";
+  const googleDriveLink = "https://drive.google.com/drive/folders/1hJCGXmON-jrLW9yluCt_qXL7eTKL32xq?usp=sharing";
 
   return <section id="gallery" className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">

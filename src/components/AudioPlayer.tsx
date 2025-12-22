@@ -10,6 +10,11 @@ export const AudioPlayer = () => {
     if (hasInitializedRef.current || !audioRef.current) return;
     hasInitializedRef.current = true;
     audioRef.current.volume = 0.5;
+    // Keep play/pause state in sync with element events
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    audioRef.current.addEventListener("play", onPlay);
+    audioRef.current.addEventListener("pause", onPause);
     const playAudio = async () => {
       if (!audioRef.current) return;
       try {
@@ -20,36 +25,42 @@ export const AudioPlayer = () => {
         if (audioRef.current) {
           audioRef.current.muted = true;
           setIsMuted(true);
+          // Try play muted and ensure interaction triggers playback/unmute
           try {
             await audioRef.current.play();
             setIsPlaying(true);
-
-            // Unmute on first user interaction
-            const unmuteOnInteraction = () => {
-              if (audioRef.current) {
-                audioRef.current.muted = false;
-                setIsMuted(false);
-              }
-              document.removeEventListener("click", unmuteOnInteraction);
-              document.removeEventListener("scroll", unmuteOnInteraction);
-              document.removeEventListener("keydown", unmuteOnInteraction);
-            };
-            document.addEventListener("click", unmuteOnInteraction, {
-              once: true
-            });
-            document.addEventListener("scroll", unmuteOnInteraction, {
-              once: true
-            });
-            document.addEventListener("keydown", unmuteOnInteraction, {
-              once: true
-            });
           } catch (e) {
-            console.warn("Autoplay blocked:", e);
+            console.warn("Autoplay muted still blocked:", e);
           }
+          const onInteraction = () => {
+            if (!audioRef.current) return;
+            audioRef.current
+              .play()
+              .then(() => setIsPlaying(true))
+              .catch(() => {});
+            audioRef.current.muted = false;
+            setIsMuted(false);
+            document.removeEventListener("click", onInteraction);
+            document.removeEventListener("scroll", onInteraction);
+            document.removeEventListener("keydown", onInteraction);
+            document.removeEventListener("touchstart", onInteraction);
+            document.removeEventListener("pointerdown", onInteraction);
+            document.removeEventListener("wheel", onInteraction);
+          };
+          document.addEventListener("click", onInteraction, { once: true });
+          document.addEventListener("scroll", onInteraction, { once: true });
+          document.addEventListener("keydown", onInteraction, { once: true });
+          document.addEventListener("touchstart", onInteraction, { once: true });
+          document.addEventListener("pointerdown", onInteraction, { once: true });
+          document.addEventListener("wheel", onInteraction, { once: true });
         }
       }
     };
     playAudio();
+    return () => {
+      audioRef.current?.removeEventListener("play", onPlay);
+      audioRef.current?.removeEventListener("pause", onPause);
+    };
   }, []);
   const toggleMute = async () => {
     if (!audioRef.current) return;

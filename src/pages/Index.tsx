@@ -7,10 +7,12 @@ import { InfluencersSection } from "@/components/InfluencersSection";
 import { CommunitySection } from "@/components/CommunitySection";
 import { Footer } from "@/components/Footer";
 import { AwardSection } from "@/components/AwardSection";
+import { LeadModal } from "@/components/LeadModal";
 
 const Index = () => {
   return (
     <main className="min-h-screen bg-background">
+      <LeadModal />
       <HeroSection />
       <GallerySection />
       <ManifestoSection />
