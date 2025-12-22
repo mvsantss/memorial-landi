@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Image as ImageIcon } from "lucide-react"; // Removido ChevronLeft, ChevronRight
+import { X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react"; // Adicionado ChevronLeft, ChevronRight
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { galleryImages } from "@/utils/galleryImages";
 
@@ -118,7 +118,7 @@ export const GallerySection = () => {
         e.stopPropagation();
         prevImage();
       }} className="absolute left-4 p-2 hover:bg-secondary rounded-full transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+            <ChevronLeft className="w-8 h-8" />
           </button>
           
           <img src={displayedImages[selectedImage].src} alt={displayedImages[selectedImage].alt} className="max-h-[85vh] max-w-[90vw] object-contain animate-scale-in" onClick={e => e.stopPropagation()} />
@@ -127,7 +127,7 @@ export const GallerySection = () => {
         e.stopPropagation();
         nextImage();
       }} className="absolute right-4 p-2 hover:bg-secondary rounded-full transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+            <ChevronRight className="w-8 h-8" />
           </button>
 
           {/* Image Counter */}

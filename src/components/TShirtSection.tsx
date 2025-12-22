@@ -4,6 +4,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext, // Importar CarouselNext
+  CarouselPrevious, // Importar CarouselPrevious
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -70,6 +72,8 @@ export const TShirtSection = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              <CarouselPrevious className="hidden md:flex -left-4 bg-background/80 hover:bg-primary hover:text-primary-foreground border-primary/20" />
+              <CarouselNext className="hidden md:flex -right-4 bg-background/80 hover:bg-primary hover:text-primary-foreground border-primary/20" />
             </Carousel>
           </div>
 
