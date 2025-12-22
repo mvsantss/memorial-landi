@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, X, Image as ImageIcon } from "lucide-react";
+import { X, Image as ImageIcon } from "lucide-react"; // Removido ChevronLeft, ChevronRight
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { galleryImages } from "@/utils/galleryImages";
 
 // Global set to track preloaded images across component re-mounts
 const preloadedUrls = new Set<string>();
 
-const IMAGES_PER_PAGE = 8;
+const IMAGES_TO_DISPLAY = 10; // Alterado para exibir apenas 10 imagens
+
 export const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
   
   const {
     ref: headerRef,
@@ -24,54 +24,32 @@ export const GallerySection = () => {
   } = useScrollAnimation({
     threshold: 0.1
   });
-  const totalPages = Math.ceil(galleryImages.length / IMAGES_PER_PAGE);
-  const currentImages = galleryImages.slice(currentPage * IMAGES_PER_PAGE, (currentPage + 1) * IMAGES_PER_PAGE);
 
-  // Smart preloading strategy
+  // Exibir apenas as primeiras IMAGES_TO_DISPLAY imagens
+  const displayedImages = galleryImages.slice(0, IMAGES_TO_DISPLAY);
+
+  // Smart preloading strategy (simplificado, pois não há paginação)
   useEffect(() => {
-    // Preload current, previous, and next few pages
-    // We prioritize the immediate navigation paths
-    const pagesToPreload = [
-      currentPage,
-      currentPage + 1,
-      currentPage - 1,
-      currentPage + 2
-    ].filter(p => p >= 0 && p < totalPages);
-
-    pagesToPreload.forEach(page => {
-      const startIdx = page * IMAGES_PER_PAGE;
-      const endIdx = Math.min(startIdx + IMAGES_PER_PAGE, galleryImages.length);
-      
-      for (let i = startIdx; i < endIdx; i++) {
-        const imageUrl = galleryImages[i].src;
-        if (!preloadedUrls.has(imageUrl)) {
-          // Mark as preloaded immediately to prevent duplicate requests
-          preloadedUrls.add(imageUrl);
-          
-          const img = new Image();
-          img.src = imageUrl;
-          // We don't need to do anything on load since we rely on browser cache
-          // and the global set prevents re-triggering
-        }
+    displayedImages.forEach(image => {
+      const imageUrl = image.src;
+      if (!preloadedUrls.has(imageUrl)) {
+        preloadedUrls.add(imageUrl);
+        const img = new Image();
+        img.src = imageUrl;
       }
     });
-  }, [currentPage, totalPages]);
+  }, [displayedImages]);
 
   const openLightbox = (index: number) => {
-    const globalIndex = currentPage * IMAGES_PER_PAGE + index;
-    setSelectedImage(globalIndex);
+    setSelectedImage(index); // O índice agora é relativo às displayedImages
   };
   const closeLightbox = () => setSelectedImage(null);
-  const nextImage = () => setSelectedImage(prev => prev !== null ? (prev + 1) % galleryImages.length : null);
-  const prevImage = () => setSelectedImage(prev => prev !== null ? (prev - 1 + galleryImages.length) % galleryImages.length : null);
-  const goToNextPage = () => {
-    setCurrentPage(prev => Math.min(prev + 1, totalPages - 1));
-  };
-  const goToPrevPage = () => {
-    setCurrentPage(prev => Math.max(prev - 1, 0));
-  };
-  const canGoNext = currentPage < totalPages - 1;
-  const canGoPrev = currentPage > 0;
+  // Lightbox navegação ajustada para as 10 imagens
+  const nextImage = () => setSelectedImage(prev => prev !== null ? (prev + 1) % displayedImages.length : null);
+  const prevImage = () => setSelectedImage(prev => prev !== null ? (prev - 1 + displayedImages.length) % displayedImages.length : null);
+
+  const googleDriveLink = "https://drive.google.com/drive/folders/1RbKzcJzHhgnNruqaexwv3An6tnsUvVq-";
+
   return <section id="gallery" className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
@@ -83,33 +61,19 @@ export const GallerySection = () => {
           </h2>
         </div>
 
-        {/* Video Section - Slideshow of clips */}
-        
-
         {/* Photo Gallery */}
         <div className="mt-16" ref={galleryRef}>
           <h3 className={`text-xl md:text-2xl font-headline uppercase mb-2 text-center text-muted-foreground transition-all duration-500 ${galleryVisible ? "opacity-100" : "opacity-0"}`}>
-            O Mural Oficial do Encontro
+            Destaques do Encontro
           </h3>
           <p className={`text-center text-foreground/70 mb-8 text-lg font-body transition-all duration-500 delay-100 ${galleryVisible ? "opacity-100" : "opacity-0"}`}>
-            Não deixe as fotos ficarem só na sua galeria!<br className="md:hidden" /> O mural oficial está no ar!
+            Uma amostra da brutalidade que marcou o 1º Encontro Landi Turbina.
           </p>
 
-          {/* Gallery Container with Fixed Height */}
+          {/* Photo Grid with 10 images */}
           <div className={`relative transition-all duration-500 delay-150 ${galleryVisible ? "opacity-100" : "opacity-0"}`}>
-            {/* Navigation Arrows */}
-            <button onClick={goToPrevPage} disabled={!canGoPrev} className={`absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${canGoPrev ? "opacity-100 hover:bg-primary hover:border-primary hover:text-primary-foreground cursor-pointer" : "opacity-30 cursor-not-allowed"}`} aria-label="Página anterior">
-              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-
-            <button onClick={goToNextPage} disabled={!canGoNext} className={`absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${canGoNext ? "opacity-100 hover:bg-primary hover:border-primary hover:text-primary-foreground cursor-pointer" : "opacity-30 cursor-not-allowed"}`} aria-label="Próxima página">
-              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-
-            {/* Photo Grid with Limited Height */}
-            <div className="mx-8 md:mx-12 overflow-hidden">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 min-h-[400px] md:min-h-[500px]">
-                {currentImages.map((image, index) => <div key={`${currentPage}-${index}`} onClick={() => openLightbox(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)} className="relative overflow-hidden cursor-pointer group animate-gallery-item" style={{
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3"> {/* Ajustado para 5 colunas */}
+              {displayedImages.map((image, index) => <div key={index} onClick={() => openLightbox(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)} className="relative overflow-hidden cursor-pointer group animate-gallery-item" style={{
                 animationDelay: `${index * 60}ms`
               }}>
                     <div className="relative aspect-square">
@@ -131,63 +95,14 @@ export const GallerySection = () => {
                       </div>
                     </div>
                   </div>)}
-              </div>
             </div>
 
-            {/* Pagination Indicators */}
-            <div className="flex items-center justify-center gap-2 mt-6 flex-wrap">
-              {/* First Page */}
-              {currentPage > 2 && (
-                <>
-                  <button
-                    onClick={() => setCurrentPage(0)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full bg-secondary/30 text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-sm"
-                  >
-                    1
-                  </button>
-                  {currentPage > 3 && <span className="text-muted-foreground">...</span>}
-                </>
-              )}
-
-              {/* Page Numbers Window */}
-              {Array.from({ length: totalPages })
-                .map((_, index) => index)
-                .filter(page => page >= currentPage - 2 && page <= currentPage + 2)
-                .map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 text-sm ${
-                      page === currentPage
-                        ? "bg-primary text-primary-foreground scale-110 font-bold"
-                        : "bg-secondary/30 text-muted-foreground hover:bg-primary hover:text-primary-foreground"
-                    }`}
-                    aria-label={`Ir para página ${page + 1}`}
-                  >
-                    {page + 1}
-                  </button>
-                ))}
-
-              {/* Last Page */}
-              {currentPage < totalPages - 3 && (
-                <>
-                  {currentPage < totalPages - 4 && <span className="text-muted-foreground">...</span>}
-                  <button
-                    onClick={() => setCurrentPage(totalPages - 1)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full bg-secondary/30 text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-sm"
-                  >
-                    {totalPages}
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* Photo count info */}
-            <div className="flex justify-center mt-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/30 rounded-full text-xs text-muted-foreground/70 font-body">
-                <ImageIcon className="w-3 h-3" />
-                <span>{galleryImages.length} fotos no mural</span>
-              </div>
+            {/* Google Drive Link */}
+            <div className="flex justify-center mt-12">
+              <a href={googleDriveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full text-lg font-headline uppercase hover:bg-primary/90 transition-colors duration-300 shadow-lg hover:shadow-xl">
+                <ImageIcon className="w-5 h-5" />
+                <span>VER TODAS AS {galleryImages.length} FOTOS NO GOOGLE DRIVE</span>
+              </a>
             </div>
           </div>
         </div>
@@ -203,21 +118,21 @@ export const GallerySection = () => {
         e.stopPropagation();
         prevImage();
       }} className="absolute left-4 p-2 hover:bg-secondary rounded-full transition-colors">
-            <ChevronLeft className="w-8 h-8" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
           </button>
           
-          <img src={galleryImages[selectedImage].src} alt={galleryImages[selectedImage].alt} className="max-h-[85vh] max-w-[90vw] object-contain animate-scale-in" onClick={e => e.stopPropagation()} />
+          <img src={displayedImages[selectedImage].src} alt={displayedImages[selectedImage].alt} className="max-h-[85vh] max-w-[90vw] object-contain animate-scale-in" onClick={e => e.stopPropagation()} />
           
           <button onClick={e => {
         e.stopPropagation();
         nextImage();
       }} className="absolute right-4 p-2 hover:bg-secondary rounded-full transition-colors">
-            <ChevronRight className="w-8 h-8" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
           </button>
 
           {/* Image Counter */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground font-body">
-            {selectedImage + 1} / {galleryImages.length}
+            {selectedImage + 1} / {displayedImages.length}
           </div>
         </div>}
     </section>;
