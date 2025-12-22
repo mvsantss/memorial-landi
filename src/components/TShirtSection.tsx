@@ -1,4 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import {
   Carousel,
@@ -21,26 +24,27 @@ const tShirtImages = [
 
 export const TShirtSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const whatsappLink = "https://api.whatsapp.com/send/?phone=5514997297754&text=Quero%20saber%20mais%20informa%C3%A7%C3%B5es%20sobre%20a%20camiseta%20da%20Landi%20Turbina%21&type=phone_number&app_absent=0";
+  const baseMessage = selectedSize
+    ? `Gostaria de saber mais informações sobre a camiseta da Landi Turbina! Tem tamanho ${selectedSize}?`
+    : "Gostaria de saber mais informações sobre a camiseta da Landi Turbina!";
+  const whatsappLink = `https://api.whatsapp.com/send/?phone=5514997297754&text=${encodeURIComponent(baseMessage)}&type=phone_number&app_absent=0`;
 
   return (
-    <section className="py-20 md:py-32 bg-landi-black relative overflow-hidden" ref={ref}>
+    <section className="py-12 md:py-16 bg-background relative overflow-hidden" ref={ref}>
       <div className="container mx-auto px-4 relative z-10">
         <div className={`max-w-5xl mx-auto text-center transition-all duration-700 ${isVisible ? "animate-scroll-fade-up" : "opacity-0 translate-y-12"}`}>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-headline uppercase mb-4">
-            <span className="text-foreground">O Estilo que Acelera.</span>
-            <br />
-            <span className="text-primary skew-headline inline-block mt-2">A Camiseta Oficial.</span>
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-headline uppercase mb-4">
+            <span className="text-foreground">Camiseta Oficial Landi Turbina</span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mt-6 font-body max-w-3xl mx-auto">
-            Lançada no 1º Encontro Landi Turbina, essa camiseta é mais que um item de vestuário: é a sua identidade no Time dos Barulhentos. Vista a paixão pela potência e pelo estilo.
+          <p className="text-base md:text-lg text-muted-foreground leading-relaxed mt-4 font-body max-w-3xl mx-auto">
+            Lançada no 1º Encontro Landi Turbina — identidade do Time dos Barulhentos.
           </p>
         </div>
 
-        <div className={`mt-16 flex flex-col lg:flex-row items-center justify-center gap-12 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          {/* Carousel da Camiseta */}
-          <div className="w-full lg:w-1/2 max-w-md">
+        <div className={`mt-10 flex flex-col lg:flex-row items-start justify-center gap-8 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
+          <div className="w-full lg:w-1/2 max-w-md mx-auto">
             <Carousel
               opts={{
                 align: "center",
@@ -58,7 +62,7 @@ export const TShirtSection = () => {
                 {tShirtImages.map((image, index) => (
                   <CarouselItem key={index}>
                     <div className="p-1">
-                      <div className="aspect-square rounded-xl overflow-hidden border border-primary/20 shadow-2xl">
+                      <div className="aspect-square rounded-xl overflow-hidden border border-primary/20 shadow-2xl bg-background">
                         <img
                           src={image.src}
                           alt={image.alt}
@@ -74,34 +78,36 @@ export const TShirtSection = () => {
             </Carousel>
           </div>
 
-          {/* Detalhes da Compra */}
-          <div className="w-full lg:w-1/2 max-w-lg text-center lg:text-left">
-            <h3 className="text-2xl md:text-3xl font-headline uppercase text-foreground mb-4">
-              Garanta a Sua!
-            </h3>
-            <p className="text-lg md:text-xl text-muted-foreground font-body mb-6">
-              Lançada no 1º Encontro Landi Turbina — disponível para todos.
-            </p>
-
-            <div className="bg-secondary/30 p-6 rounded-lg mb-8 border border-primary/20 shadow-inner">
-              <p className="text-xl md:text-2xl font-body text-muted-foreground line-through">
-                De: R$ 189,90
-              </p>
-              <p className="text-3xl md:text-4xl font-headline uppercase text-primary mt-2 mb-4">
-                Por: R$ 129,90 no Cartão
-              </p>
-              <p className="text-2xl md:text-3xl font-headline uppercase text-foreground">
-                Ou: R$ 100,00 no Pix
-              </p>
+          <div className="w-full lg:w-1/2 max-w-lg">
+            <div className="w-full rounded-xl border border-primary/20 bg-background/60 backdrop-blur-sm shadow-xl p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl md:text-2xl font-headline uppercase text-foreground">Garanta a sua</h3>
+                <span className="text-xs md:text-sm font-body text-muted-foreground">Produto oficial</span>
+              </div>
+              <div className="mt-4 bg-secondary/30 p-4 rounded-lg border border-primary/20">
+                <div className="flex items-baseline gap-3">
+                  <span className="text-muted-foreground font-body line-through text-lg">R$ 189,90</span>
+                  <span className="text-2xl md:text-3xl font-headline uppercase text-primary">R$ 129,90</span>
+                </div>
+                <div className="mt-2 text-sm md:text-base font-headline uppercase text-foreground">Ou R$ 100,00 no Pix</div>
+              </div>
+              <div className="mt-6 space-y-3">
+                <Label className="font-body text-sm text-muted-foreground">Selecione o tamanho</Label>
+                <ToggleGroup type="single" value={selectedSize ?? ""} onValueChange={(v) => setSelectedSize(v)} className="flex flex-wrap gap-2">
+                  <ToggleGroupItem value="P" variant="outline" size="sm" className="font-headline uppercase tracking-wide rounded-md border-primary/40 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">P</ToggleGroupItem>
+                  <ToggleGroupItem value="M" variant="outline" size="sm" className="font-headline uppercase tracking-wide rounded-md border-primary/40 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">M</ToggleGroupItem>
+                  <ToggleGroupItem value="G" variant="outline" size="sm" className="font-headline uppercase tracking-wide rounded-md border-primary/40 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">G</ToggleGroupItem>
+                  <ToggleGroupItem value="GG" variant="outline" size="sm" className="font-headline uppercase tracking-wide rounded-md border-primary/40 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">GG</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              <div className="mt-6">
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="block w-full">
+                  <Button variant="default" size="lg" className="w-full font-headline text-base md:text-lg tracking-wide" disabled={!selectedSize}>
+                    Comprar via WhatsApp
+                  </Button>
+                </a>
+              </div>
             </div>
-
-            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              <Button variant="hero" size="xl" className="font-headline text-lg tracking-wide group">
-                <span className="group-hover:scale-105 inline-block transition-transform">
-                  QUERO MINHA CAMISETA!
-                </span>
-              </Button>
-            </a>
           </div>
         </div>
       </div>

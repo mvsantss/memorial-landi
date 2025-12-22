@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react"; // Adicionado ChevronLeft, ChevronRight
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { galleryImages } from "@/utils/galleryImages";
+import { TShirtSection } from "@/components/TShirtSection";
 
 // Global set to track preloaded images across component re-mounts
 const preloadedUrls = new Set<string>();
@@ -52,7 +53,11 @@ export const GallerySection = () => {
 
   return <section id="gallery" className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
+        <div className="mt-6">
+          <TShirtSection />
+        </div>
+
+        {/* Section Header (reposicionado abaixo da seção de compra) */}
         <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? "animate-scroll-fade-up" : "opacity-0 translate-y-12"}`}>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-headline uppercase mb-4">
             <span className="text-foreground">O Ronco que Ficou na Imagem.</span>

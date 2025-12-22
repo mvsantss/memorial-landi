@@ -1,7 +1,6 @@
 import { HeroSection } from "@/components/HeroSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { GallerySection } from "@/components/GallerySection";
-import { TShirtSection } from "@/components/TShirtSection"; // Importar o novo componente
 import { SponsorsSection } from "@/components/SponsorsSection";
 import { InfluencersSection } from "@/components/InfluencersSection";
 import { CommunitySection } from "@/components/CommunitySection";
@@ -17,7 +16,6 @@ const Index = () => {
       <GallerySection />
       <ManifestoSection />
       <AwardSection />
-      <TShirtSection /> {/* Adicionar a nova seção aqui */}
       <SponsorsSection />
       <InfluencersSection />
       <CommunitySection />
