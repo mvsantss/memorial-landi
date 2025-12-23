@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react"; // Adicionado ChevronLeft, ChevronRight
+import { X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { galleryImages } from "@/utils/galleryImages";
 import { TShirtSection } from "@/components/TShirtSection";
+import logotipoGrafismo from "@/assets/logotipo-grafismo.svg"; // Importando a logo
 
 // Global set to track preloaded images across component re-mounts
 const preloadedUrls = new Set<string>();
 
-const IMAGES_TO_DISPLAY = 10; // Alterado para exibir apenas 10 imagens
+const IMAGES_TO_DISPLAY = 10;
 
 export const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
@@ -25,6 +26,12 @@ export const GallerySection = () => {
   } = useScrollAnimation({
     threshold: 0.1
   });
+  const {
+    ref: logoRef,
+    isVisible: logoVisible
+  } = useScrollAnimation({
+    threshold: 0.2
+  }); // Hook para a animação da logo
 
   // Exibir apenas as primeiras IMAGES_TO_DISPLAY imagens
   const displayedImages = galleryImages.slice(0, IMAGES_TO_DISPLAY);
@@ -42,7 +49,7 @@ export const GallerySection = () => {
   }, [displayedImages]);
 
   const openLightbox = (index: number) => {
-    setSelectedImage(index); // O índice agora é relativo às displayedImages
+    setSelectedImage(index);
   };
   const closeLightbox = () => setSelectedImage(null);
   // Lightbox navegação ajustada para as 10 imagens
@@ -53,6 +60,15 @@ export const GallerySection = () => {
 
   return <section id="gallery" className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
+        {/* Logo da Empresa */}
+        <div ref={logoRef} className={`mb-16 transition-all duration-700 ${logoVisible ? "animate-scroll-fade-up" : "opacity-0 translate-y-12"}`}>
+          <img 
+            src={logotipoGrafismo} 
+            alt="Landi Turbina" 
+            className="w-full max-w-3xl mx-auto h-auto object-contain" 
+          />
+        </div>
+
         <div className="mt-6">
           <TShirtSection />
         </div>
@@ -77,7 +93,7 @@ export const GallerySection = () => {
 
           {/* Photo Grid with 10 images */}
           <div className={`relative transition-all duration-500 delay-150 ${galleryVisible ? "opacity-100" : "opacity-0"}`}>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3"> {/* Ajustado para 5 colunas */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3">
               {displayedImages.map((image, index) => <div key={index} onClick={() => openLightbox(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)} className="relative overflow-hidden cursor-pointer group animate-gallery-item" style={{
                 animationDelay: `${index * 60}ms`
               }}>
