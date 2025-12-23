@@ -3,7 +3,7 @@ import { X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { galleryImages } from "@/utils/galleryImages";
 import { TShirtSection } from "@/components/TShirtSection";
-import logotipoGrafismo from "@/assets/logotipo-grafismo.svg"; // Importando a logo
+import logotipoGrafismo from "@/assets/logotipo-grafismo-02.png"; // Importando a logo atualizada
 
 // Global set to track preloaded images across component re-mounts
 const preloadedUrls = new Set<string>();

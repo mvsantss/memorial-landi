@@ -12,15 +12,15 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-import camisetaMockupFrente from "@/assets/tshirts/1º Encontro Landi Turbina-5.webp";
-import camisetaRack from "@/assets/tshirts/1º Encontro Landi Turbina-67.webp";
-import camisetaNova from "@/assets/tshirts/landi-turbina-mockup.webp";
+const importedTshirtImages = import.meta.glob<string>("@/assets/tshirts/*.{png,webp,jpg,jpeg}", {
+  eager: true,
+  import: "default",
+});
 
-const tShirtImages = [
-  { src: camisetaMockupFrente, alt: "Camiseta Landi Turbina - Mockup frente" },
-  { src: camisetaRack, alt: "Camiseta Landi Turbina em uso no evento" },
-  { src: camisetaNova, alt: "Camiseta Landi Turbina - frente em estúdio" },
-];
+const tShirtImages = Object.entries(importedTshirtImages)
+  .filter(([path]) => !path.includes("landi-turbina-mockup.webp"))
+  .map(([path, src]) => ({ src, alt: "Camiseta Landi Turbina" }))
+  .sort((a, b) => a.src.localeCompare(b.src));
 
 export const TShirtSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
